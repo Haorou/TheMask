@@ -1,0 +1,41 @@
+file:///c%3A/Plugin_YB/qrcode-2248cb8064763c1f16b29732082e49cf8baa4ba8/assets/js/newqrcodeController.js {"mtime":1607900256734,"size":1081,"etag":"3664f6nk313r","orphaned":true}
+$(document).ready(function() 
+{
+	var var_qrcode = new QRCode(document.getElementById("imageQrCode"), 
+										{
+										    text: "",
+										    width: 150,
+										    height: 150,
+										    colorDark : "#000000",
+										    colorLight : "#ffffff",
+										    correctLevel : QRCode.CorrectLevel.H
+										});
+									
+	callServlet('QRCodeServlet',{'typeOperation' : 'checkIfQrCodeExist'}, 
+				function(data) 
+				{
+					if(data != "QrCodeNotExist")
+					{
+						document.getElementById("AllReadyLaunch").style.display = "block";
+						$('#contenuQrCode').html(data);					
+						var_qrcode.makeCode(data);
+					}
+				}, function (error) {
+					console.log("Error 1 : " + error.message);
+				});
+				
+	generate = function(type)
+	{
+		callServlet('QRCodeServlet',{'typeOperation' : type}, 
+				function(data) 
+				{
+					document.getElementById("AllReadyLaunch").style.display = "block";
+					$('#contenuQrCode').html(data);					
+					var_qrcode.makeCode(data);
+				}, function (error) {
+					console.log("Error 2 : " + error.message);
+				});
+	
+	
+	}
+});

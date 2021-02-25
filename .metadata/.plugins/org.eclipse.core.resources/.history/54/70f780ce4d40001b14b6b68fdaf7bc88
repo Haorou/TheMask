@@ -1,0 +1,53 @@
+$(document).ready(function() 
+{
+	var var_qrcode = new QRCode(document.getElementById("imageQrCode"), 
+								{
+								    text: "",
+								    width: 150,
+								    height: 150,
+								    colorDark : "#000000",
+								    colorLight : "#ffffff",
+								    correctLevel : QRCode.CorrectLevel.H
+								});
+	
+	callServlet('QRCodeServlet',{'typeOperation' : 'QRCode_checkIfExist'}, 
+				function(data) 
+				{
+					if(data != "QrCodeNotExist")
+					{
+						$('#AlreadyLaunch').show();
+						$('#imageQrCode').show();
+						$('#imageQrCode').html(data);
+						$('#imageQrCode').children('img').attr('class', 'mx-auto d-block');
+						var alt = $('#imageQrCode').children('img').attr('alt');
+						$('#contenuQrCode').html(alt);
+					}
+				}, function (error) {
+					console.log("Error - QRCodeServlet : " + error.message);
+				});
+
+	generate = function(type)
+	{
+		callServlet('QRCodeServlet',{'typeOperation' : type}, 
+			function(data) 
+			{
+				makeAndDisplayQrCode(data);
+				var imgSrc = $('#imageQrCode').children('img').attr('src');
+				var imgHtml = "<img src='" + imgSrc + "' alt='"+ data +"'>";
+				
+				callServlet('QRCodeServlet',{'typeOperation' : 'QRCode_writeIntoYB|' + imgHtml});
+			}, function (error) {
+					console.log("Error Generate - QRCodeServlet : " + type + " " + error.message);
+			});
+	}
+	
+	makeAndDisplayQrCode = function(data)
+	{
+		$('#AlreadyLaunch').show();
+		$('#imageQrCode').show();
+		$('#contenuQrCode').html(data);
+		var_qrcode.makeCode(data);
+		$('#imageQrCode').children('img').attr('class', 'mx-auto d-block');
+	}
+	
+});

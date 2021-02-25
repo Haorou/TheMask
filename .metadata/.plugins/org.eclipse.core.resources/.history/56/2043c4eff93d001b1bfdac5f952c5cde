@@ -1,0 +1,52 @@
+package com.dimosoftware.qrcode.servlets;
+
+import java.util.List;
+
+import com.dimosoftware.qrcode.components.QRCodeComponent;
+import com.yellowbox.plugin.v3.ParamValues;
+import com.yellowbox.plugin.v3.Servlet;
+import com.yellowbox.ws.beans.Value;
+
+public class QRCodeServlet extends Servlet {
+
+	
+	//ParamValues : string // variable typeOperation ("generate") / variable typeTyppant ("chien")
+	@Override
+	public String call(ParamValues paramsServlet) 
+	{
+		QRCodeComponent qRCodeComponent = (QRCodeComponent) getComponent(); 
+		String typeOperation = paramsServlet.getStringValue("typeOperation");
+
+		String qrCodeData = "empty";
+		if(typeOperation.equals("generate"))
+		{
+			String idCurrentFiche = getYellowboxEntryPoint().get("REF_FICHE").toString();
+			String idFieldFirstName = qRCodeComponent.getParamValues().getStringValue("ybFirstNameField");
+			String idFieldLastName = qRCodeComponent.getParamValues().getStringValue("ybLastNameField");
+			String firstName = "";
+			String lastName = "";
+			
+			List<Value> valeurs = getYellowboxEntryPoint().getServices().getRecordService().getRecordFromId(idCurrentFiche).getValues();
+			for(Value value : valeurs)
+			{
+				if(value.getField().getId().equals(idFieldFirstName))
+				{
+					firstName = value.getValue();
+				}
+				else if(value.getField().getId().equals(idFieldLastName))
+				{
+					lastName = value.getValue();
+				}
+			}
+
+			qrCodeData = firstName + " " + lastName;
+		}
+
+		return qrCodeData;
+	}
+	
+	@Override
+	public String getName() {
+		return "QRCodeServlet";
+	}
+}

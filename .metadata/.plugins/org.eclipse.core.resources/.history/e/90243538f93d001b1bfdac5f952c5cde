@@ -1,0 +1,8 @@
+<button id="qrcode"  onclick="generate('generate')" class="btn btn-yellow">
+	Creer QR Code
+</button>
+
+
+<div id="qrcode_id_div" style="display: none"></div>
+
+<span id="text-qrcode"></span>

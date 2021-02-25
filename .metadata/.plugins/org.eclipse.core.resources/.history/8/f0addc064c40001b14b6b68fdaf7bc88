@@ -1,0 +1,191 @@
+package com.dimosoftware.qrcode.servlets;
+
+import java.text.Normalizer;
+import java.util.List;
+
+import com.dimosoftware.qrcode.components.QRCodeComponent;
+import com.yellowbox.plugin.notification.INotifUser;
+import com.yellowbox.plugin.v3.ParamValues;
+import com.yellowbox.plugin.v3.Servlet;
+import com.yellowbox.plugin.v3.YellowboxEntryPoint;
+import com.yellowbox.ws.beans.Record;
+import com.yellowbox.ws.beans.Value;
+
+public class QRCodeServlet extends Servlet 
+{
+	QRCodeComponent qRCodeComponent;
+    YellowboxEntryPoint ybEntryPoint;
+    INotifUser notifUser;
+
+	String idCurrentFiche;
+    Record currentRecord;
+    String infosFields;
+	List<Value> valuesCurrentFiche;
+	int sizeValuesCurrentFiche;
+	
+	String idFields;
+	String[] array_idField;
+
+	String idQrCodeContenuField;
+	String idQrCodeImgHtmlField;
+	
+	@Override
+	public String call(ParamValues paramsServlet) 
+	{
+		// Variable permettant de recuperer les valeurs parametres (entre autres)
+		qRCodeComponent = (QRCodeComponent) getComponent(); 
+		
+		// Variable relatifs aux differents services utilises
+		ybEntryPoint = getYellowboxEntryPoint(); 
+		notifUser = ybEntryPoint.getNotification();
+		
+		// Recuperation de l'Id de la fiche courante et des valeurs de l'enregistrement
+		idCurrentFiche = getYellowboxEntryPoint().get("REF_FICHE").toString();
+		// Recuperation de l'enregistrement courant (la fiche sur laquelle se trouve l'utilisateur)
+		currentRecord = getYellowboxEntryPoint().getServices().getRecordService().getRecordFromId(idCurrentFiche);
+		// Une Value contient, entre autre, l'Id du champ, son nom et sa valeur
+		valuesCurrentFiche = currentRecord.getValues();
+		// Comment on va avoir besoin d'utiliser des boucles for pour visiter les valeurs, 
+		// on recupere la taille une seule fois ici
+		sizeValuesCurrentFiche = valuesCurrentFiche.size();
+
+		// Recuperation de toutes les IdFields dans un String [Separation de chaque IdFied dans une List]
+		idFields = qRCodeComponent.getParamValues().getStringValue("ybFields"); 
+		array_idField = idFields.split(",");;
+		
+		idQrCodeContenuField = qRCodeComponent.getParamValues().getStringValue("ybQrCodeContenuField");
+		idQrCodeImgHtmlField = qRCodeComponent.getParamValues().getStringValue("ybQrCodeImgHtmlField");
+		
+		
+		// Recuperation de la chaine de caracteres envoyee par le JS
+		String typeOperation = paramsServlet.getStringValue("typeOperation");
+
+		String varReturn = "";
+		if(typeOperation.equals("QRCode_checkIfExist"))
+		{
+			for(int i = 0; i < sizeValuesCurrentFiche; i++)
+			{
+				if(valuesCurrentFiche.get(i).getField().getId().equals(idQrCodeContenuField)) 
+				{
+					Value valueQrCodeContenu = valuesCurrentFiche.get(i);
+					if(valueQrCodeContenu.getValue().equals(""))
+					{
+						varReturn = "QrCodeNotExist";
+					}
+					else
+					{
+						varReturn = valueQrCodeContenu.getValue();					
+					}
+				}
+			}
+		}
+		else if(typeOperation.equals("QRCode_getInfos"))
+		{
+			infosFields = unaccent(GetQrCodeInfos());
+			varReturn = infosFields;
+		}
+		else if(typeOperation.startsWith("QRCode_writeIntoYB"))
+		{
+			String imgHtml = typeOperation.split("\\|")[1];
+			writeQRCodeInYb(imgHtml, infosFields);
+		}
+		else
+		{
+			varReturn = "typeOperation ne repond a aucune condition";
+		}
+
+		return varReturn;
+	}
+	
+	@Override
+	public String getName() {
+		return "QRCodeServlet";
+	}
+	
+	// On recupere ici les informations de differents champs pour les transformer en QR Code
+	public String GetQrCodeInfos()
+	{
+		String qrCodeContenu = "";		
+		for(int i = 0; i < sizeValuesCurrentFiche; i++)
+		{
+			for(String idField : array_idField)
+			{
+				if(valuesCurrentFiche.get(i).getField().getId().equals(idField))
+				{
+					qrCodeContenu += valuesCurrentFiche.get(i).getField().getName();
+					qrCodeContenu += " : " + valuesCurrentFiche.get(i).getValue() + " ";			
+				}
+			}
+		}
+		return qrCodeContenu;
+	}
+	
+	// Inscription dans la base de donnees l'image au format HTML et le contenu des champs
+	public void writeQRCodeInYb(String imgHtml, String data)
+	{	
+		for(int i = 0; i < sizeValuesCurrentFiche; i++)
+		{
+			if(valuesCurrentFiche.get(i).getField().getId().equals(idQrCodeImgHtmlField)) 
+			{
+				Value valueQRCodeImgHtml = valuesCurrentFiche.get(i);
+				valueQRCodeImgHtml.setValue(imgHtml);
+				valuesCurrentFiche.set(i, valueQRCodeImgHtml);
+			}
+			else if(valuesCurrentFiche.get(i).getField().getId().equals(idQrCodeContenuField))
+			{
+				Value valueQRCodeContenu = valuesCurrentFiche.get(i);
+				valueQRCodeContenu.setValue(data);
+				valuesCurrentFiche.set(i, valueQRCodeContenu);
+			}
+		}
+		
+		currentRecord.setValues(valuesCurrentFiche);
+		getYellowboxEntryPoint().getServices().getRecordService().createOrUpdate(currentRecord);
+	}
+
+	// Supprime les accents des champs recuperer : les QR Code n'acceptent pas les accents
+	public static String unaccent(String src) 
+	{
+		return Normalizer
+				.normalize(src, Normalizer.Form.NFD)
+				.replaceAll("[^\\p{ASCII}]", "");
+	}
+
+	/* FONCTIONS INUTILES AVEC zxing QrCode
+	public String generateByteArrayQRCode(String data) throws WriterException, IOException
+	{
+        int size = 400;
+
+        BitMatrix bitMatrix = generateMatrix(data, size);
+		
+		BufferedImage bImageQrCode = MatrixToImageWriter.toBufferedImage(bitMatrix);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	    
+		ImageIO.write(bImageQrCode, "jpg", bos );
+		
+		byte[] byteArray = bos.toByteArray();
+		int sizeByteArray = byteArray.length;
+		int indexToFoget = sizeByteArray - 1;
+		
+		String stringByteArray= "[";
+		for(int i = 0; i < sizeByteArray; i++)
+		{
+			stringByteArray += byteArray[i];
+			if(i != indexToFoget)
+			{
+				stringByteArray += ",";
+			}
+		}
+		stringByteArray += "]";
+		
+	    return stringByteArray;
+	}
+
+	private static BitMatrix generateMatrix(String data, int size) throws WriterException 
+    {
+        BitMatrix bitMatrix = new QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, size, size);
+        return bitMatrix;
+    }
+	*/
+	
+}

@@ -1,0 +1,119 @@
+package com.dimosoftware.qrcode.components;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.yellowbox.plugin.v3.Param;
+import com.dimosoftware.qrcode.servlets.QRCodeServlet;
+import com.yellowbox.plugin.v3.Component;
+import com.yellowbox.plugin.v3.Param.InOut;
+import com.yellowbox.plugin.v3.Param.Type;
+import com.yellowbox.plugin.v3.ParamServlet;
+import com.yellowbox.plugin.v3.Params;
+import com.yellowbox.plugin.v3.Servlet;
+import com.yellowbox.plugin.v3.ui.UIPanel;
+import com.yellowbox.plugin.v3.ui.UIParamDefault;
+import com.yellowbox.plugin.v3.ui.UIRoot;
+
+public class QRCodeComponent extends Component 
+{
+	@Override
+	public String getHtml() 
+	{
+		String html = getRessourceAsString("/html/BaseTemplate.html");
+		
+		return html;
+	}
+	
+	@Override
+	public List<Class<? extends Servlet>> getServlets() 
+	{
+		List<Class<? extends Servlet>> listServlet = new ArrayList<>();
+		listServlet.add(QRCodeServlet.class);
+		return listServlet;
+	}
+
+	@Override
+	public List<String> getAssets() 
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getListCss() {
+		List<String> listCss = new ArrayList<>();
+		listCss.add("/css/bootstrap.min.css");
+		listCss.add("/css/QrCodeStyles.css");
+		return listCss;
+	}
+
+	@Override
+	public List<String> getListJs() 
+	{
+		List<String> listJS = new ArrayList<>();
+		listJS.add("/js/qrcode.min.js");
+		listJS.add("/js/bootstrap.min.js");
+		listJS.add("/js/qrcodeController.js");
+		return listJS;
+	}
+
+	@Override
+	public String getDescription() 
+	{
+		return "Affiche un QR Code";
+	}
+
+	@Override
+	public String getName() 
+	{
+		return "QRCodeComponentName";
+	}
+
+	@Override
+	public UIRoot getParamInstanceUI() {
+		UIRoot uiRoot = new UIRoot();
+
+		UIPanel pnlMapping = new UIPanel("Informations a codifier");
+
+		pnlMapping.add(new UIParamDefault("ybFields"));
+		pnlMapping.add(new UIParamDefault("ybQrCodeByteArrayField"));
+		pnlMapping.add(new UIParamDefault("ybQrCodeContenuField"));
+		uiRoot.add(pnlMapping);
+
+		return uiRoot;
+		
+	}
+
+	@Override
+	public Params getParams() 
+	{
+		Params parameters = new Params();
+
+		Param fields = parameters.addNew(Type.IDFIELD, InOut.IN, "Champs a recuperer", "ybFields");
+		fields.setMulti(true);
+		fields.setDescription("");
+
+		Param prmQrCodeByteArrayString = parameters.addNew(Type.IDFIELD, InOut.IN, "Champs contenant l'image au format HTML",
+				"ybQrCodeImgHtmlField");
+		prmQrCodeByteArrayString.setDescription("");
+		Param prmQrCodeContenu = parameters.addNew(Type.IDFIELD, InOut.IN, "Champs contenant le contenu du QR Code",
+				"ybQrCodeContenuField");
+		prmQrCodeContenu.setDescription("");
+		
+		return parameters;
+	}
+
+	@Override
+	public List<Class<? extends ParamServlet>> getParamServlets() throws AbstractMethodError {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTitle() 
+	{
+		return "QRCodeComponentTitle";
+	}
+
+}

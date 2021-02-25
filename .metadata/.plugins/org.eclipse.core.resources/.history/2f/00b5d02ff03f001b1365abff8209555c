@@ -1,0 +1,41 @@
+$(document).ready(function() 
+{
+	var var_qrcode = new QRCode(document.getElementById("imageQrCode"), 
+								{
+								    text: "",
+								    width: 150,
+								    height: 150,
+								    colorDark : "#000000",
+								    colorLight : "#ffffff",
+								    correctLevel : QRCode.CorrectLevel.H
+								});
+	
+	generate = function(type)
+	{
+		callServlet('QRCodeServlet',{'typeOperation' : type}, 
+			function(data) 
+			{
+				$('#contenuQrCode').html(data);
+				document.getElementById("AlreadyLaunch").style.display = "block";				
+				document.getElementById("imageQrCode").style.display = "block";
+				var_qrcode.makeCode(data);
+
+				callServlet('QRCodeServlet',{'typeOperation' : 'GenerateQRCode_writeIntoYB'});
+			});
+	}
+});
+
+/*
+callServlet('QRCodeServlet',{'typeOperation' : 'checkIfQrCodeExist'}, 
+				function(data) 
+				{
+					if(data != "QrCodeNotExist")
+					{
+						document.getElementById("AllReadyLaunch").style.display = "block";
+						$('#contenuQrCode').html(data);					
+						var_qrcode.makeCode(data);
+					}
+				}, function (error) {
+					console.log("Error 1 : " + error.message);
+				});
+*/

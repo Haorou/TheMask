@@ -1,0 +1,20 @@
+1607349155557	Rename type 'LaunchEmailWithQrCode'
+1607349178980	Copy compilation unit
+1607357202724	Rename local variable 'idFielLastName'
+1607523632896	Rename local variable 'vvvv'
+1607674822011	Rename field 'idQrCodeStringField'
+1607694588401	Rename local variable 'qrCodeData'
+1607695826659	Rename method 'GenerateStringQRCode'
+1607696176968	Rename field 'sizeVauesCurrentFiche'
+1607701191421	Rename field 'currentContactRecord'
+1607812061134	Rename package 'com.dimosoftware.devplugin.servlets'
+1607812094581	Delete element
+1607812705058	Rename method 'GenerateByteArrayQRCode'
+1607812732687	Rename method 'WriteQRCodeContenuAndByteArrayInYb'
+1607899082616	Rename package 'com.dimosoftware.devplugin.servlets'
+1607899088201	Delete element
+1607899102784	Rename package 'com.dimosoftware.devplugin.components'
+1607899249320	Move file
+1607899259215	Delete element
+1607899266181	Move file
+1607899306558	Rename resource 'qrcode.js'

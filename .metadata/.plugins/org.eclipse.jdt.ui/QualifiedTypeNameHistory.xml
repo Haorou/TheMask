@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
+    <fullyQualifiedTypeName name="java.io.File"/>
+    <fullyQualifiedTypeName name="com.dimosoftware.devplugin.servlets.QRCodeServlet"/>
+    <fullyQualifiedTypeName name="com.dimosoftware.devplugin.components.QRCodeComponent"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.Param"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.v3.Param.Type"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.v3.Param.InOut"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.v3.Function"/>
+    <fullyQualifiedTypeName name="com.google.zxing.client.j2se.MatrixToImageConfig"/>
+    <fullyQualifiedTypeName name="java.awt.Image"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.YbEntier"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.v3.YellowboxEntryPoint"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.Mail"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.Attachment"/>
+    <fullyQualifiedTypeName name="java.awt.image.BufferedImage"/>
+    <fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
+    <fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.MailAttachment"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.YellowboxEntryPoint"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.notification.INotifUser"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.service.IMailService"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.Value"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.service.IRecordService"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.Record"/>
+    <fullyQualifiedTypeName name="com.google.zxing.WriterException"/>
+    <fullyQualifiedTypeName name="com.google.zxing.common.BitMatrix"/>
+    <fullyQualifiedTypeName name="com.google.zxing.qrcode.QRCodeWriter"/>
+    <fullyQualifiedTypeName name="com.google.zxing.BarcodeFormat"/>
+    <fullyQualifiedTypeName name="com.google.zxing.client.j2se.MatrixToImageWriter"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.v3.ui.UIPanel"/>
+    <fullyQualifiedTypeName name="com.yellowbox.plugin.v3.ui.UIParamDefault"/>
+    <fullyQualifiedTypeName name="java.io.Console"/>
+    <fullyQualifiedTypeName name="java.text.Normalizer"/>
+    <fullyQualifiedTypeName name="java.nio.file.Files"/>
+    <fullyQualifiedTypeName name="java.nio.file.Paths"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.Field"/>
+    <fullyQualifiedTypeName name="com.yellowbox.ws.beans.ImportRecord"/>
+</qualifiedTypeNameHistroy>

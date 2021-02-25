@@ -1,0 +1,24 @@
+$(document).ready(function() 
+{
+	var var_qrcode = new QRCode(document.getElementById("qrcode_id_div"), 
+								{
+								    text: "",
+								    width: 150,
+								    height: 150,
+								    colorDark : "#000000",
+								    colorLight : "#ffffff",
+								    correctLevel : QRCode.CorrectLevel.H
+								});
+	
+	QRCode = function(type)
+	{
+		callServlet('QRCodeServlet',{'typeOperation' : type}, 
+			function(data) 
+			{
+				$('#text-qrcode').html(data);
+				
+				document.getElementById("qrcode_id_div").style.display = "block";
+				var_qrcode.makeCode(data);
+			});
+	}
+});
